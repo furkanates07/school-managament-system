@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Meta tags for character set and viewport -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Title and external stylesheets and scripts -->
+    <title>Student Management</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="students.js" defer></script>
+    <script src="courses.js" defer></script>
+    <script src="CourseManager.js" defer></script>
+    <script src="StudentManager.js" defer></script>
+    <script src="Main.js" defer></script>
+</head>
+
+<body>
+    <header>
+        <!-- Header content including the logo and navigation -->
+        <h1>sch00l</h1>
+        <nav>
+            <ul>
+                <li><button>help</button></li>
+                <li><button>log out</button></li>
+            </ul>
+        </nav>
+    </header>   
+    <main>
+        <aside id="admin">
+            <!-- Admin card with profile information -->
+            <div class="admin-card">
+                <div class="img"><img src="https://i.hizliresim.com/88ocfm0.png" /></div>
+                <div class="admin-info">
+                    <h3>Selahattin Aksoy</h3>
+                    <h4>#3532352</h4>
+                </div>
+            </div>
+
+            <!-- Buttons for courses and students -->
+            <button id="coursesButton">Courses</button>
+    
+            <button id="studentsButton">Students</button>
+            
+        </aside>
+
+        <section id="screen">
+            <!-- Main content section with a welcome message -->
+            <h1>Welcome to the Student Management System, Selahattin!</h1>
+            <h3>Select an option from the left side, please.</h3>
+        </section>
+    </main>
+
+    <footer>
+        <!-- Footer content goes here -->
+        <p>&copy; 2023 sch00l. All rights reserved.</p>
+    </footer>
+</body>
+</html>
