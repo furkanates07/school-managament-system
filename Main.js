@@ -153,7 +153,7 @@ function handleStudentsButtonClick() {
                       <label for="courseSelect">Course:</label>
                       <select class="courseSelect" id="coursetoaddstudent"></select>
                       <label for="studentIDtoAddwithScores">ID:</label>
-                      <input type="text" id="studentIDtoAddwithScores" placeholder="Enter student name">
+                      <input type="text" id="studentIDtoAddwithScores" placeholder="Enter student ID">
                       <label for="midtermScore">Midterm Score:</label>
                       <input type="number" id="midtermScore" placeholder="Enter midterm score">
                       <label for="finalScore">Final Score:</label>
