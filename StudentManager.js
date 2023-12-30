@@ -278,6 +278,9 @@ class StudentManager {
       alert(`Course with ID ${courseId} not found.`);
       return;
     }
+
+    const course = new CourseManager(this.courses, this.students);
+    course.addStudenttoCourse(courseId, studentId);
   
     // Check if midterm and final scores are valid
     if (midtermScore > 100 || finalScore > 100 || midtermScore < 0 || finalScore < 0) {

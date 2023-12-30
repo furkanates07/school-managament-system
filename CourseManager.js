@@ -132,6 +132,7 @@ class CourseManager {
         id: newId,
         course_name: courseName,
         instructor_name: instructorName,
+        student_ids: [],
       };
 
       // Add the new course to the courses array
@@ -177,6 +178,27 @@ class CourseManager {
     this.createCourseTable();
     this.populateCourseDropdown();
   }
+
+  addStudenttoCourse(courseId, studentId) {
+    // Find the course by ID
+    const course = this.courses.find((c) => c.id === courseId);
+
+    if (!course) {
+        console.error(`Course with ID ${courseId} not found.`);
+        return;
+    }
+
+    // Check if the student ID is already in the course's student_ids array
+    if (course.student_ids.includes(studentId)) {
+        console.log(`Student with ID ${studentId} is already in Course ${courseId}.`);
+        return;
+    }
+
+    // Add the student ID to the course's student_ids array
+    course.student_ids.push(studentId);
+
+    console.log(`Student with ID ${studentId} added to Course ${courseId}.`);
+}
 
   calculateLetterGradesForCourse(courseId, scale) {
     // Method to calculate and display letter grades for a course
