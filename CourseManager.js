@@ -102,14 +102,14 @@ class CourseManager {
     this.populateCourseDropdown();
   }
 
-  createCourseID(){
+  createCourseID() {
     // Method to create a new student ID
     const newId = this.courses.length + Math.floor(Math.random() * 500);
-    
+
     if (this.courses.find((course) => course.id === newId)) {
       // If the ID already exists, call the method again to generate a new ID
       return this.createCourseID();
-    } 
+    }
 
     return newId;
   }
@@ -184,21 +184,23 @@ class CourseManager {
     const course = this.courses.find((c) => c.id === courseId);
 
     if (!course) {
-        console.error(`Course with ID ${courseId} not found.`);
-        return;
+      console.error(`Course with ID ${courseId} not found.`);
+      return;
     }
 
     // Check if the student ID is already in the course's student_ids array
     if (course.student_ids.includes(studentId)) {
-        console.log(`Student with ID ${studentId} is already in Course ${courseId}.`);
-        return;
+      console.log(
+        `Student with ID ${studentId} is already in Course ${courseId}.`
+      );
+      return;
     }
 
     // Add the student ID to the course's student_ids array
     course.student_ids.push(studentId);
 
     console.log(`Student with ID ${studentId} added to Course ${courseId}.`);
-}
+  }
 
   calculateLetterGradesForCourse(courseId, scale) {
     // Method to calculate and display letter grades for a course
@@ -230,29 +232,39 @@ class CourseManager {
     });
     thead.appendChild(headerRow);
 
-    // Create table body
-    course.student_ids.forEach((studentId) => {
-      const student = new StudentManager(this.students, this.courses);
-      const average = parseInt(
-        student.calculateWeightedAverage(courseId, studentId)
-      );
-      const grade = this.calculateLetterGrade(average, scale);
+    const sortedRows = course.student_ids
+      .map((studentId) => {
+        const student = new StudentManager(this.students, this.courses);
+        const average = parseInt(
+          student.calculateWeightedAverage(courseId, studentId)
+        );
+        const grade = this.calculateLetterGrade(average, scale);
 
+        return { studentId, average, grade };
+      })
+      .sort((a, b) => {
+        // Custom sorting function to sort by letter grades
+        const gradeOrder = { A: 1, B: 2, C: 3, D: 4, F: 5 };
+        return gradeOrder[a.grade] - gradeOrder[b.grade];
+      });
+
+    // Create table body
+    sortedRows.forEach((student) => {
       const row = document.createElement("tr");
 
       // Add student ID cell
       const studentIDCell = document.createElement("td");
-      studentIDCell.appendChild(document.createTextNode(studentId));
+      studentIDCell.appendChild(document.createTextNode(student.studentId));
       row.appendChild(studentIDCell);
 
       // Add average cell
       const averageCell = document.createElement("td");
-      averageCell.appendChild(document.createTextNode(average));
+      averageCell.appendChild(document.createTextNode(student.average));
       row.appendChild(averageCell);
 
       // Add grade cell
       const gradeCell = document.createElement("td");
-      gradeCell.appendChild(document.createTextNode(grade));
+      gradeCell.appendChild(document.createTextNode(student.grade));
       row.appendChild(gradeCell);
 
       tbody.appendChild(row);
