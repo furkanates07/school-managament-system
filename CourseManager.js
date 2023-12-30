@@ -8,15 +8,15 @@ class CourseManager {
   createCourseTable() {
     // Method to create and display a table of courses
     const allCoursesDiv = document.querySelector(".all-courses");
-  
+
     // Clear the content of the 'all-courses' div before appending the table
     allCoursesDiv.innerHTML = "";
-  
+
     // Create table, thead, and tbody elements
     const table = document.createElement("table");
     const thead = document.createElement("thead");
     const tbody = document.createElement("tbody");
-  
+
     // Create table header
     const headerRow = document.createElement("tr");
     ["ID", "Course Name", "Instructor Name"].forEach((headerText) => {
@@ -25,7 +25,7 @@ class CourseManager {
       headerRow.appendChild(th);
     });
     thead.appendChild(headerRow);
-  
+
     // Create table body
     this.courses.forEach((course) => {
       const row = document.createElement("tr");
@@ -34,21 +34,20 @@ class CourseManager {
         cell.appendChild(document.createTextNode(course[key]));
         row.appendChild(cell);
       });
-  
+
       tbody.appendChild(row);
     });
-  
+
     // Append the header and body to the table
     table.appendChild(thead);
     table.appendChild(tbody);
-  
+
     // Append the table to the 'all-courses' div
     allCoursesDiv.appendChild(table);
-  
+
     // Add the 'active' class to the 'all-courses' div
     allCoursesDiv.classList.add("active");
   }
-  
 
   populateCourseDropdown() {
     // Method to populate course dropdown options
@@ -83,28 +82,36 @@ class CourseManager {
 
   deleteCourseById(courseId) {
     // Method to delete a course by ID
-    const index = this.courses.findIndex(
-      (course) => course.id === courseId
-    );
-  
+    const index = this.courses.findIndex((course) => course.id === courseId);
+
     if (index !== -1) {
       // Remove the course from the courses array
       this.courses.splice(index, 1);
       console.log(`Course with ID ${courseId} deleted successfully.`);
-      
+
       // Remove the course from the COURSES array
-      const globalIndex = COURSES.findIndex(
-        (course) => course.id === courseId
-      );
+      const globalIndex = COURSES.findIndex((course) => course.id === courseId);
       if (globalIndex !== -1) {
         COURSES.splice(globalIndex, 1);
       }
     } else {
       console.error(`Course with ID ${courseId} not found.`);
     }
-  
+
     this.createCourseTable();
     this.populateCourseDropdown();
+  }
+
+  createCourseID(){
+    // Method to create a new student ID
+    const newId = this.courses.length + Math.floor(Math.random() * 500);
+    
+    if (this.courses.find((course) => course.id === newId)) {
+      // If the ID already exists, call the method again to generate a new ID
+      return this.createCourseID();
+    } 
+
+    return newId;
   }
 
   addCourse(courseName, instructorName) {
@@ -118,7 +125,7 @@ class CourseManager {
       console.error(`Course "${courseName}" already exists.`);
     } else {
       // Generate a unique ID (replace this with your logic to generate IDs)
-      const newId = this.courses.length + 100;
+      const newId = this.createCourseID();
 
       // Create a new course object
       const newCourse = {
@@ -142,53 +149,56 @@ class CourseManager {
     // Method to delete a student from a course
     // Find the course by ID
     const course = this.courses.find((c) => c.id === courseId);
-  
+
     if (!course) {
       console.error(`Course with ID ${courseId} not found.`);
       return;
     }
-  
+
     // Check if the student ID exists in the course's student_ids array
     const studentIndex = course.student_ids.indexOf(studentId);
-  
+
     if (studentIndex !== -1) {
       // Remove the student ID from the array
       course.student_ids.splice(studentIndex, 1);
-      console.log(`Student with ID ${studentId} removed from Course ${courseId}.`);
+      console.log(
+        `Student with ID ${studentId} removed from Course ${courseId}.`
+      );
     } else {
       // Display an alert if the student ID is not found
-      console.error(`Student with ID ${studentId} not found in Course ${courseId}.`);
+      console.error(
+        `Student with ID ${studentId} not found in Course ${courseId}.`
+      );
       alert(`Student with ID ${studentId} not found in Course ${courseId}.`);
       return;
     }
-  
+
     // Update the course table and dropdown
     this.createCourseTable();
     this.populateCourseDropdown();
   }
-  
 
   calculateLetterGradesForCourse(courseId, scale) {
     // Method to calculate and display letter grades for a course
     const course = this.courses.find((c) => c.id === courseId);
-  
+
     if (!course) {
       console.error(`Course with ID ${courseId} not found.`);
       return;
     }
-  
+
     console.log(`Course: ${course.course_name}`);
     console.log(`Scale: ${scale}-Point Scale`);
-  
+
     const allCoursesDiv = document.querySelector(".all-courses");
-  
+
     // Clear the content of the 'all-grades' div before appending the table
     allCoursesDiv.innerHTML = "";
-  
+
     const table = document.createElement("table");
     const thead = document.createElement("thead");
     const tbody = document.createElement("tbody");
-  
+
     // Create table header
     const headerRow = document.createElement("tr");
     ["Student ID", "Average", "Grade"].forEach((headerText) => {
@@ -197,44 +207,45 @@ class CourseManager {
       headerRow.appendChild(th);
     });
     thead.appendChild(headerRow);
-  
+
     // Create table body
     course.student_ids.forEach((studentId) => {
       const student = new StudentManager(this.students, this.courses);
-      const average = parseInt(student.calculateWeightedAverage(courseId, studentId));
+      const average = parseInt(
+        student.calculateWeightedAverage(courseId, studentId)
+      );
       const grade = this.calculateLetterGrade(average, scale);
-  
+
       const row = document.createElement("tr");
-  
+
       // Add student ID cell
       const studentIDCell = document.createElement("td");
       studentIDCell.appendChild(document.createTextNode(studentId));
       row.appendChild(studentIDCell);
-  
+
       // Add average cell
       const averageCell = document.createElement("td");
       averageCell.appendChild(document.createTextNode(average));
       row.appendChild(averageCell);
-  
+
       // Add grade cell
       const gradeCell = document.createElement("td");
       gradeCell.appendChild(document.createTextNode(grade));
       row.appendChild(gradeCell);
-  
+
       tbody.appendChild(row);
     });
-  
+
     // Append the header and body to the table
     table.appendChild(thead);
     table.appendChild(tbody);
-  
+
     // Append the table to the 'all-grades' div
     allCoursesDiv.appendChild(table);
-  
+
     // Add the 'active' class to the 'all-grades' div
     allCoursesDiv.classList.add("active");
   }
-  
 
   calculateLetterGrade(score, scale) {
     // Method to calculate letter grade based on a scale
@@ -265,60 +276,69 @@ class CourseManager {
     } else {
       return "Invalid scale";
     }
-
   }
 
   createPassFailTable(courseId) {
     // Method to create and display a table of pass/fail counts for a course
     const course = this.courses.find((c) => c.id === courseId);
-  
+
     if (!course) {
       console.error(`Course with ID ${courseId} not found.`);
       return;
     }
-  
+
     console.log(`Course: ${course.course_name}`);
-  
+
     const allCoursesDiv = document.querySelector(".all-courses");
-  
+
     // Clear the content of the 'all-courses' div before appending the table
     allCoursesDiv.innerHTML = "";
-  
+
     // Create the table and its components
     const table = document.createElement("table");
     const thead = document.createElement("thead");
     const tbody = document.createElement("tbody");
-  
+
     // Create table header
     const headerRow = document.createElement("tr");
-    ["Course ID", "Course Name", "Pass (10 Scale)", "Fail (10 Scale)", "Pass (7 Scale)", "Fail (7 Scale)", "Mean Score (100 Scale)"].forEach((headerText) => {
+    [
+      "Course ID",
+      "Course Name",
+      "Pass (10 Scale)",
+      "Fail (10 Scale)",
+      "Pass (7 Scale)",
+      "Fail (7 Scale)",
+      "Mean Score (100 Scale)",
+    ].forEach((headerText) => {
       const th = document.createElement("th");
       th.appendChild(document.createTextNode(headerText));
       headerRow.appendChild(th);
     });
     thead.appendChild(headerRow);
-  
+
     // Create table body
     const passFailRow = document.createElement("tr");
-  
+
     // Add Course ID cell
     const courseIdCell = document.createElement("td");
     courseIdCell.appendChild(document.createTextNode(course.id));
     passFailRow.appendChild(courseIdCell);
-  
+
     // Add Course Name cell
     const courseNameCell = document.createElement("td");
     courseNameCell.appendChild(document.createTextNode(course.course_name));
     passFailRow.appendChild(courseNameCell);
-  
+
     // Calculate and add Pass/Fail counts for 10 Scale
     const passFailCounts10 = this.calculatePassFailCounts(courseId, 10);
     ["pass_10", "fail_10"].forEach((countKey) => {
       const countCell = document.createElement("td");
-      countCell.appendChild(document.createTextNode(passFailCounts10[countKey]));
+      countCell.appendChild(
+        document.createTextNode(passFailCounts10[countKey])
+      );
       passFailRow.appendChild(countCell);
     });
-  
+
     // Calculate and add Pass/Fail counts for 7 Scale
     const passFailCounts7 = this.calculatePassFailCounts(courseId, 7);
     ["pass_7", "fail_7"].forEach((countKey) => {
@@ -326,59 +346,68 @@ class CourseManager {
       countCell.appendChild(document.createTextNode(passFailCounts7[countKey]));
       passFailRow.appendChild(countCell);
     });
-  
+
     // Calculate and add Mean Score (100 Scale)
-    const meanScore = this.calculateMeanScore(passFailCounts10, passFailCounts7, 100);
+    const meanScore = this.calculateMeanScore(
+      passFailCounts10,
+      passFailCounts7,
+      100
+    );
     const meanScoreCell = document.createElement("td");
     meanScoreCell.appendChild(document.createTextNode(meanScore));
     passFailRow.appendChild(meanScoreCell);
-  
+
     tbody.appendChild(passFailRow);
-  
+
     // Append the header and body to the table
     table.appendChild(thead);
     table.appendChild(tbody);
-  
+
     // Append the table to the 'all-courses' div
     allCoursesDiv.appendChild(table);
-  
+
     // Add the 'active' class to the 'all-courses' div
     allCoursesDiv.classList.add("active");
   }
 
   calculateMeanScore(passFailCounts10, passFailCounts7, scale) {
     // Calculate the mean score based on pass/fail counts and the specified scale
-    const totalStudents = passFailCounts10.pass_10 + passFailCounts10.fail_10 +
-                          passFailCounts7.pass_7 + passFailCounts7.fail_7;
+    const totalStudents =
+      passFailCounts10.pass_10 +
+      passFailCounts10.fail_10 +
+      passFailCounts7.pass_7 +
+      passFailCounts7.fail_7;
 
-    const totalScore = (passFailCounts10.pass_10 * 10) + (passFailCounts7.pass_7 * 7);
+    const totalScore =
+      passFailCounts10.pass_10 * 10 + passFailCounts7.pass_7 * 7;
     const meanScore = (totalScore / totalStudents) * (scale / 10);
 
     return meanScore.toFixed(2); // Assuming you want to display the mean score with two decimal places
   }
 
-  
   calculatePassFailCounts(courseId, scale) {
     const passFailCounts = { pass_10: 0, fail_10: 0, pass_7: 0, fail_7: 0 };
-  
+
     const course = this.courses.find((c) => c.id === courseId);
-  
+
     if (!course) {
       console.error(`Course with ID ${courseId} not found.`);
       return passFailCounts;
     }
-  
+
     // Iterate through student IDs to calculate pass/fail counts
     course.student_ids.forEach((studentId) => {
       // Create a new StudentManager instance
       const student = new StudentManager(this.students, this.courses);
-      
+
       // Calculate weighted average for the student in the given course
-      const average = parseInt(student.calculateWeightedAverage(courseId, studentId));
-      
+      const average = parseInt(
+        student.calculateWeightedAverage(courseId, studentId)
+      );
+
       // Calculate letter grade based on the given scale
       const grade = this.calculateLetterGrade(average, scale);
-  
+
       // Update pass/fail counts based on the calculated grade
       if (scale === 10) {
         passFailCounts[grade === "F" ? "fail_10" : "pass_10"]++;
@@ -386,9 +415,7 @@ class CourseManager {
         passFailCounts[grade === "F" ? "fail_7" : "pass_7"]++;
       }
     });
-  
+
     return passFailCounts;
   }
-
 }
-

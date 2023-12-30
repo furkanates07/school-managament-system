@@ -103,6 +103,17 @@ class StudentManager {
     return overallGPA.toFixed(2);
   }
 
+  createStudentID(){
+    const studentId = this.students.length + Math.floor(Math.random() * 500);
+
+    if (this.students.find((s) => s.id === studentId)) {
+      // If the ID already exists, recursively call the function again
+      return this.createStudentID();
+    }
+
+    return studentId;
+  }
+
   addStudent(name, gender) {
     // Validate inputs
     if (!name || !gender) {
@@ -117,7 +128,7 @@ class StudentManager {
     }
   
     // Generate a unique ID for the new student
-    const newStudentId = this.students.length + 1;
+    const newStudentId = this.createStudentID();
   
     // Create a new student object
     const newStudent = {
