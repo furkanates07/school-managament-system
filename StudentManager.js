@@ -169,7 +169,32 @@ class StudentManager {
     // Update the displayed table after deleting the student
     this.createStudentTable();
   }
-  
+
+  deleteCourseFromStudent(studentID, courseID) {
+    // Find the student by ID
+    const student = this.students.find((s) => s.id === studentID);
+
+    if (!student) {
+      console.error(`Student with ID ${studentID} not found.`);
+      alert(`Student with ID ${studentID} not found.`);
+      return;
+    }
+
+    // Check if the student is enrolled in the specified course
+    const courseIndex = student.courses.findIndex((course) => course.course_id === courseID);
+
+    if (courseIndex !== -1) {
+      // Remove the course from the student's courses array
+      student.courses.splice(courseIndex, 1);
+      console.log(`Course with ID ${courseID} deleted successfully for Student ${studentID}.`);
+    } else {
+      console.error(`Student with ID ${studentID} is not enrolled in Course ${courseID}.`);
+      alert(`Student with ID ${studentID} is not enrolled in Course ${courseID}.`);
+    }
+
+    // Update the displayed table after deleting the course
+    this.createStudentTable();
+  }
 
   getStudentCoursesAndGPATable(id, name) {
     // Find the student by ID and name

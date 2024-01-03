@@ -165,6 +165,8 @@ class CourseManager {
       console.log(
         `Student with ID ${studentId} removed from Course ${courseId}.`
       );
+      const student = new StudentManager(this.students, this.courses);
+      student.deleteCourseFromStudent(studentId, courseId);
     } else {
       // Display an alert if the student ID is not found
       console.error(
